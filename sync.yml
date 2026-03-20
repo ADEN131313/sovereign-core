@@ -1,0 +1,26 @@
+name: Sovereign-Core Sync
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # Every 15 minutes
+  workflow_dispatch: # Allows manual trigger button in GitHub Actions tab
+
+jobs:
+  sync-fleet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Sovereign-Core
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: pip install requests GitPython
+
+      - name: Run Sync
+        env:
+          BASE44_API_KEY: ${{ secrets.BASE44_API_KEY }}
+        run: python sync_agents.py
